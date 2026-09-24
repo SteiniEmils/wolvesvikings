@@ -1,79 +1,160 @@
 import Image from "next/image"
 import Link from "next/link"
-import { fixturesFor, nextGlassboy, nextWolf } from "@/data/fixtures"
+import { fixtures, nextGlassboy, nextWolf } from "@/data/fixtures"
 import { group } from "@/data/group"
-import { FixtureTicket } from "@/components/fixture-ticket"
-import { formatFixtureDate } from "@/lib/format"
+import { ClubCards } from "@/components/club-cards"
+import { buttonVariants } from "@/components/ui/button"
+import { formatFixtureDate, kickoffLine } from "@/lib/format"
+import { loadBanners } from "@/lib/scores"
 
 export const dynamic = "force-dynamic"
 
+const news = [
+  {
+    title: "Wolves take the Black Country derby",
+    body: "A 1–0 win over West Bromwich Albion at Molineux on 20 September. Fer López scored it.",
+  },
+  {
+    title: "Glassboys beaten at home by Real Bedford",
+    body: "Stourbridge 1–4 Real Bedford at the War Memorial Athletic Ground on 22 September.",
+  },
+  {
+    title: "Next from Iceland",
+    body: "Rushall Olympic away in the FA Trophy, then Middlesbrough away when the Championship restarts.",
+  },
+]
+
 export default async function HomePage() {
-  const wolves = fixturesFor("wolves").slice(0, 4)
+  const banners = await loadBanners()
+  const trips = [...fixtures].sort((a, b) => a.date.localeCompare(b.date)).slice(0, 3)
+  const matches = [...fixtures].sort((a, b) => a.date.localeCompare(b.date)).slice(0, 4)
 
   return (
-    <div className="grid gap-12">
-      <section className="text-center">
+    <div>
+      <section className="relative min-h-[620px] overflow-hidden">
         <Image
-          src="/brand/wolves-vikings-logo.jpg"
-          alt="Wolves Vikings"
-          width={640}
-          height={640}
+          src="/photos/hero-stadium.png"
+          alt="Supporters in gold and black in the stands"
+          fill
           priority
-          className="mx-auto w-full max-w-sm object-contain"
+          className="object-cover"
         />
-        <p className="mx-auto mt-2 max-w-xl text-base leading-7 text-muted-foreground sm:text-lg">
-          {group.line}
-        </p>
-      </section>
-
-      <section className="grid gap-4">
-        <p className="text-sm tracking-wide text-primary uppercase">Next Wolf</p>
-        <p className="max-w-2xl text-sm leading-6 text-muted-foreground">
-          The Championship is on an international break. Next Wolf is {nextWolf.opponent},{" "}
-          {nextWolf.home ? "at home" : "away"}, {formatFixtureDate(nextWolf.date)}.
-        </p>
-        <FixtureTicket fixture={nextWolf} featured />
-      </section>
-
-      <section className="border-l-4 border-glassboys bg-card px-5 py-5">
-        <p className="text-sm tracking-wide text-glassboys uppercase">The Glassboys</p>
-        <h2 className="mt-2 font-display text-4xl">{nextGlassboy.opponent}</h2>
-        <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
-          Until Molineux kicks off again, Stourbridge are out. {nextGlassboy.opponent},{" "}
-          {nextGlassboy.home ? "at home" : "away"}, {formatFixtureDate(nextGlassboy.date)},{" "}
-          {nextGlassboy.time}, {nextGlassboy.competition}. Alvechurch follow on Tuesday 29
-          September, 19:45.
-        </p>
-        <Link href="/fixtures#stourbridge" className="mt-3 inline-block text-sm text-primary">
-          Stourbridge fixtures
-        </Link>
-      </section>
-
-      <section className="grid gap-6 sm:grid-cols-3">
-        {group.beats.map((beat) => (
-          <div key={beat.title}>
-            <h2 className="font-display text-2xl">{beat.title}</h2>
-            <p className="mt-2 text-sm leading-6 text-muted-foreground">{beat.body}</p>
-          </div>
-        ))}
-      </section>
-
-      <section>
-        <h2 className="font-display text-4xl">Coming up</h2>
-        <ul className="mt-4 divide-y divide-border border-y border-border">
-          {wolves.map((fixture) => (
-            <li key={fixture.id} className="flex flex-col gap-1 py-3 sm:flex-row sm:items-baseline sm:justify-between">
-              <Link href="/fixtures" className="font-display text-2xl hover:text-primary">
-                {fixture.home ? "Wolves" : fixture.opponent}
-                <span className="text-muted-foreground"> {fixture.home ? "v" : "v"} </span>
-                {fixture.home ? fixture.opponent : "Wolves"}
+        <div className="absolute inset-0 bg-gradient-to-r from-black via-black/75 to-black/20" />
+        <div className="relative mx-auto grid min-h-[620px] max-w-6xl content-end gap-8 px-4 py-10 lg:grid-cols-[1.2fr_0.8fr] lg:items-end">
+          <div>
+            <p className="font-display text-5xl leading-[0.9] text-white sm:text-7xl">
+              FOOTBALL
+              <br />
+              FRIENDS
+              <br />
+              <span className="text-primary">TRAVEL MEMORIES</span>
+            </p>
+            <p className="mt-4 max-w-xl text-sm leading-6 text-white/80 sm:text-base">
+              {group.line} We are in Iceland. Molineux is the main event. Stourbridge is the other ground.
+            </p>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <Link href="#about" className={buttonVariants({ size: "lg" })}>
+                Our story
               </Link>
-              <span className="text-sm text-muted-foreground">
-                {formatFixtureDate(fixture.date)} · {fixture.time}
-              </span>
-            </li>
-          ))}
-        </ul>
+              <Link href="#trips" className={buttonVariants({ variant: "outline", size: "lg" })}>
+                Upcoming trips
+              </Link>
+            </div>
+          </div>
+          <p className="justify-self-end text-right font-script text-3xl text-primary sm:text-5xl">
+            Different stadiums,
+            <br />
+            same passion
+          </p>
+        </div>
+      </section>
+
+      <div className="relative z-10 mx-auto -mt-16 max-w-6xl px-4">
+        <ClubCards initial={banners} nextWolf={nextWolf} nextGlassboy={nextGlassboy} />
+      </div>
+
+      <div className="mx-auto grid max-w-6xl gap-8 px-4 py-12 lg:grid-cols-3">
+        <section id="news">
+          <div className="mb-3 flex items-baseline justify-between">
+            <h2 className="font-display text-3xl">Latest news</h2>
+          </div>
+          <ul className="grid gap-3">
+            {news.map((item) => (
+              <li key={item.title} className="border border-border bg-card p-4">
+                <h3 className="font-medium">{item.title}</h3>
+                <p className="mt-1 text-sm leading-6 text-muted-foreground">{item.body}</p>
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        <section>
+          <div className="mb-3 flex items-baseline justify-between">
+            <h2 className="font-display text-3xl">Upcoming matches</h2>
+            <Link href="/fixtures" className="text-xs tracking-wide text-primary">
+              VIEW ALL
+            </Link>
+          </div>
+          <ul className="divide-y divide-border border border-border bg-card">
+            {matches.map((fixture) => (
+              <li key={fixture.id} className="px-4 py-3">
+                <p className="font-medium">
+                  {fixture.club === "wolves" ? "Wolves" : "Stourbridge"} {fixture.home ? "vs" : "at"}{" "}
+                  {fixture.opponent}
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  {formatFixtureDate(fixture.date)} · {kickoffLine(fixture)}
+                </p>
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        <section id="trips">
+          <div className="mb-3 flex items-baseline justify-between">
+            <h2 className="font-display text-3xl">Upcoming trips</h2>
+            <Link href="/join" className="text-xs tracking-wide text-primary">
+              JOIN US
+            </Link>
+          </div>
+          <ul className="grid gap-3">
+            {trips.map((fixture, index) => (
+              <li key={fixture.id} className="grid grid-cols-[96px_1fr] overflow-hidden border border-border bg-card">
+                <Image
+                  src={index === 1 ? "/photos/away-coach.png" : "/photos/hero-stadium.png"}
+                  alt=""
+                  width={192}
+                  height={128}
+                  className="h-full w-24 object-cover"
+                />
+                <div className="p-3">
+                  <p className="text-xs text-primary">{formatFixtureDate(fixture.date)}</p>
+                  <p className="font-medium">
+                    {fixture.club === "wolves" ? "Wolves" : "Stourbridge"} {fixture.home ? "vs" : "at"}{" "}
+                    {fixture.opponent}
+                  </p>
+                  <p className="text-xs text-muted-foreground">{fixture.ground}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </section>
+      </div>
+
+      <section id="about" className="relative min-h-[360px] overflow-hidden">
+        <Image src="/photos/fans-sunset.png" alt="Supporters watching a stadium at sunset" fill className="object-cover" />
+        <div className="absolute inset-0 bg-black/55" />
+        <div className="relative mx-auto flex min-h-[360px] max-w-6xl flex-col justify-end gap-4 px-4 py-10 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <p className="font-script text-4xl text-primary sm:text-6xl">More than a supporters group</p>
+            <p className="mt-3 max-w-xl text-sm leading-6 text-white/85">
+              {group.beats.map((beat) => beat.body).join(" ")} {group.meet}
+            </p>
+          </div>
+          <Link href="/join" className={`${buttonVariants({ size: "lg" })} rounded-full`}>
+            Join Wolves Vikings
+          </Link>
+        </div>
       </section>
     </div>
   )

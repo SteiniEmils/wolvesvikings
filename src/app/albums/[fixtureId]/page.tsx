@@ -17,12 +17,18 @@ export default async function AlbumPage({
   const { fixtureId } = await params
   const fixture = fixtureById(fixtureId)
   if (!fixture) notFound()
-  if (!(await isMember())) return <AlbumLock />
+  if (!(await isMember())) {
+    return (
+      <div className="mx-auto max-w-6xl px-4 py-8">
+        <AlbumLock />
+      </div>
+    )
+  }
 
   const photos = await listPhotos(fixtureId)
 
   return (
-    <div className="grid gap-6">
+    <div className="mx-auto grid max-w-6xl gap-6 px-4 py-8">
       <header>
         <p className="text-sm tracking-wide text-primary uppercase">
           {fixture.club === "wolves" ? "Wolves" : "Stourbridge"}

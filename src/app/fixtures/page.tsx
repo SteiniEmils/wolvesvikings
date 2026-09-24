@@ -45,7 +45,7 @@ function Table({
 
 export default function FixturesPage() {
   return (
-    <div className="grid gap-10">
+    <div className="mx-auto grid max-w-6xl gap-10 px-4 py-8">
       <header>
         <h1 className="font-display text-5xl">Fixtures</h1>
         <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">

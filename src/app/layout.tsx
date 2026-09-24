@@ -1,9 +1,7 @@
 import type { Metadata } from "next"
-import { Barlow_Condensed, Geist } from "next/font/google"
-import { ScoreBanners } from "@/components/score-banners"
+import { Barlow_Condensed, Geist, Great_Vibes } from "next/font/google"
 import { SiteFooter } from "@/components/site-footer"
 import { SiteHeader } from "@/components/site-header"
-import { loadBanners } from "@/lib/scores"
 import "./globals.css"
 
 const geist = Geist({
@@ -17,20 +15,24 @@ const display = Barlow_Condensed({
   weight: ["500", "600", "700"],
 })
 
+const script = Great_Vibes({
+  variable: "--font-great-vibes",
+  subsets: ["latin"],
+  weight: "400",
+})
+
 export const metadata: Metadata = {
   title: "Wolves Vikings",
   description:
     "The lads who follow Wolverhampton Wanderers, and Stourbridge when the Glassboys are playing.",
 }
 
-export default async function RootLayout({ children }: LayoutProps<"/">) {
-  const banners = await loadBanners()
+export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${geist.variable} ${display.variable} dark h-full antialiased`}>
+    <html lang="en" className={`${geist.variable} ${display.variable} ${script.variable} dark h-full antialiased`}>
       <body className="flex min-h-full flex-col bg-background text-foreground">
         <SiteHeader />
-        <ScoreBanners initial={banners} />
-        <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-8">{children}</main>
+        <main className="w-full flex-1">{children}</main>
         <SiteFooter />
       </body>
     </html>

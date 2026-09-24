@@ -11,7 +11,7 @@ export const metadata = {
 export default async function JoinPage() {
   const [rows, member] = await Promise.all([listApplications(), isMember()])
   return (
-    <div className="grid gap-6">
+    <div className="mx-auto grid max-w-6xl gap-6 px-4 py-8">
       <header>
         <h1 className="font-display text-5xl">Join the club</h1>
         <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">

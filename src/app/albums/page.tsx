@@ -13,14 +13,20 @@ export const metadata = {
 
 export default async function AlbumsPage() {
   const member = await isMember()
-  if (!member) return <AlbumLock />
+  if (!member) {
+    return (
+      <div className="mx-auto max-w-6xl px-4 py-8">
+        <AlbumLock />
+      </div>
+    )
+  }
 
   const photos = await listPhotos()
   const wolves = fixtures.filter((fixture) => fixture.club === "wolves")
   const glassboys = fixtures.filter((fixture) => fixture.club === "stourbridge")
 
   return (
-    <div className="grid gap-8">
+    <div className="mx-auto grid max-w-6xl gap-8 px-4 py-8">
       <header>
         <h1 className="font-display text-5xl">Match photos</h1>
         <p className="mt-2 text-sm text-muted-foreground">One album for every trip.</p>
