@@ -33,9 +33,6 @@ function Table({
             <Badge variant={fixture.home ? "default" : "outline"}>
               {fixture.home ? "Home" : "Away"}
             </Badge>
-            <Link href={`/matchday?fixture=${fixture.id}`} className="text-sm text-primary">
-              Names
-            </Link>
             <Link href={`/albums/${fixture.id}`} className="text-sm text-primary">
               Album
             </Link>

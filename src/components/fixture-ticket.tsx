@@ -7,11 +7,9 @@ import { cn } from "cn"
 
 export function FixtureTicket({
   fixture,
-  names,
   featured = false,
 }: {
   fixture: Fixture
-  names?: number
   featured?: boolean
 }) {
   const glassboys = fixture.club === "stourbridge"
@@ -40,17 +38,9 @@ export function FixtureTicket({
       </h2>
       <p className="mt-3 text-base text-foreground">{formatFixtureDate(fixture.date)}</p>
       <p className="text-sm text-muted-foreground">{venueLine(fixture)}</p>
-      {typeof names === "number" ? (
-        <p className="mt-4 text-sm text-primary">
-          {names === 0 ? "Nobody down yet" : `${names} ${names === 1 ? "name" : "names"} down`}
-        </p>
-      ) : null}
       <div className="mt-5 flex flex-wrap gap-3">
-        <Link
-          href={`/matchday?fixture=${fixture.id}`}
-          className={buttonVariants({ size: "lg" })}
-        >
-          Who&apos;s in
+        <Link href="/join" className={buttonVariants({ size: "lg" })}>
+          Join the club
         </Link>
         <Link
           href={`/albums/${fixture.id}`}

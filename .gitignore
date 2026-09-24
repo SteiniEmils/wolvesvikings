@@ -38,6 +38,7 @@ yarn-error.log*
 
 # group data and match photos
 /data/matchdays.json
+/data/applications.json
 /data/albums.json
 /data/uploads/
 

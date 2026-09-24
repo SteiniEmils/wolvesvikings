@@ -9,7 +9,7 @@ export const group = {
     },
     {
       title: "We watch from Iceland",
-      body: "Most of us are here. The list is who's in for the screen, and who's actually flying over for the match.",
+      body: "The club is small and based here. New people apply, and someone already in has to approve them.",
     },
     {
       title: "Stourbridge is the other ground",

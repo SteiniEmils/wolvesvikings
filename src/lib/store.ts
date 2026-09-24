@@ -2,14 +2,14 @@ import { randomUUID } from "crypto"
 import { mkdir, readFile, writeFile } from "fs/promises"
 import path from "path"
 
-export type RsvpStatus = "here" | "flying" | "maybe"
+export type ApplicationStatus = "pending" | "approved" | "declined"
 
-export type Rsvp = {
+export type Application = {
   id: string
-  fixtureId: string
   name: string
-  status: RsvpStatus
+  place: string
   note: string
+  status: ApplicationStatus
   createdAt: string
 }
 
@@ -25,7 +25,7 @@ export type Photo = {
 
 const dataDir = path.join(process.cwd(), "data")
 const uploadsDir = path.join(dataDir, "uploads")
-const matchdaysPath = path.join(dataDir, "matchdays.json")
+const applicationsPath = path.join(dataDir, "applications.json")
 const albumsPath = path.join(dataDir, "albums.json")
 
 let chain: Promise<unknown> = Promise.resolve()
@@ -53,12 +53,8 @@ async function writeJson(file: string, value: unknown) {
   await writeFile(file, JSON.stringify(value, null, 2))
 }
 
-export function listRsvps() {
-  return withLock(() => readJson<Rsvp[]>(matchdaysPath, []))
-}
-
-export function countForFixture(fixtureId: string, rows: Rsvp[]) {
-  return rows.filter((row) => row.fixtureId === fixtureId).length
+export function listApplications() {
+  return withLock(() => readJson<Application[]>(applicationsPath, []))
 }
 
 const namePattern = /^[A-Za-z][A-Za-z .'-]{0,22}[A-Za-z]$|^[A-Za-z]{2}$/
@@ -71,50 +67,49 @@ export function cleanName(value: string) {
   return name
 }
 
-export function addRsvp(input: {
-  fixtureId: string
-  name: string
-  status: RsvpStatus
-  note: string
-}) {
+export function applyToClub(input: { name: string; place: string; note: string }) {
   return withLock(async () => {
-    const rows = await readJson<Rsvp[]>(matchdaysPath, [])
+    const rows = await readJson<Application[]>(applicationsPath, [])
     const name = cleanName(input.name)
     if (!name) {
       return { ok: false as const, error: "Use a first name, 2 to 24 letters." }
     }
-    const taken = rows.some(
-      (row) =>
-        row.fixtureId === input.fixtureId &&
-        row.name.toLowerCase() === name.toLowerCase(),
-    )
-    if (taken) {
-      return { ok: false as const, error: `${name} is already on this list.` }
+    const note = input.note.trim().replace(/\s+/g, " ")
+    if (note.length < 8 || note.length > 200) {
+      return { ok: false as const, error: "Tell the group who you are, in a sentence or two." }
     }
-    const note = input.note.trim().slice(0, 80)
-    const entry: Rsvp = {
+    const open = rows.some(
+      (row) =>
+        row.name.toLowerCase() === name.toLowerCase() &&
+        (row.status === "pending" || row.status === "approved"),
+    )
+    if (open) {
+      return { ok: false as const, error: `${name} already has an application in.` }
+    }
+    const entry: Application = {
       id: randomUUID(),
-      fixtureId: input.fixtureId,
       name,
-      status: input.status,
+      place: input.place.trim().replace(/\s+/g, " ").slice(0, 40),
       note,
+      status: "pending",
       createdAt: new Date().toISOString(),
     }
     rows.push(entry)
-    await writeJson(matchdaysPath, rows)
+    await writeJson(applicationsPath, rows)
     return { ok: true as const, entry }
   })
 }
 
-export function removeRsvp(id: string) {
+export function reviewApplication(id: string, status: "approved" | "declined") {
   return withLock(async () => {
-    const rows = await readJson<Rsvp[]>(matchdaysPath, [])
-    const next = rows.filter((row) => row.id !== id)
-    if (next.length === rows.length) {
-      return { ok: false as const, error: "That name is already off the list." }
+    const rows = await readJson<Application[]>(applicationsPath, [])
+    const row = rows.find((item) => item.id === id && item.status === "pending")
+    if (!row) {
+      return { ok: false as const, error: "That application is no longer waiting." }
     }
-    await writeJson(matchdaysPath, next)
-    return { ok: true as const }
+    row.status = status
+    await writeJson(applicationsPath, rows)
+    return { ok: true as const, entry: row }
   })
 }
 

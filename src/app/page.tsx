@@ -4,12 +4,10 @@ import { fixturesFor, nextGlassboy, nextWolf } from "@/data/fixtures"
 import { group } from "@/data/group"
 import { FixtureTicket } from "@/components/fixture-ticket"
 import { formatFixtureDate } from "@/lib/format"
-import { countForFixture, listRsvps } from "@/lib/store"
 
 export const dynamic = "force-dynamic"
 
 export default async function HomePage() {
-  const rows = await listRsvps()
   const wolves = fixturesFor("wolves").slice(0, 4)
 
   return (
@@ -34,7 +32,7 @@ export default async function HomePage() {
           The Championship is on an international break. Next Wolf is {nextWolf.opponent},{" "}
           {nextWolf.home ? "at home" : "away"}, {formatFixtureDate(nextWolf.date)}.
         </p>
-        <FixtureTicket fixture={nextWolf} names={countForFixture(nextWolf.id, rows)} featured />
+        <FixtureTicket fixture={nextWolf} featured />
       </section>
 
       <section className="border-l-4 border-glassboys bg-card px-5 py-5">
@@ -65,7 +63,7 @@ export default async function HomePage() {
         <ul className="mt-4 divide-y divide-border border-y border-border">
           {wolves.map((fixture) => (
             <li key={fixture.id} className="flex flex-col gap-1 py-3 sm:flex-row sm:items-baseline sm:justify-between">
-              <Link href={`/matchday?fixture=${fixture.id}`} className="font-display text-2xl hover:text-primary">
+              <Link href="/fixtures" className="font-display text-2xl hover:text-primary">
                 {fixture.home ? "Wolves" : fixture.opponent}
                 <span className="text-muted-foreground"> {fixture.home ? "v" : "v"} </span>
                 {fixture.home ? fixture.opponent : "Wolves"}
