@@ -6,7 +6,7 @@ import { listRsvps } from "@/lib/store"
 export const dynamic = "force-dynamic"
 
 export const metadata = {
-  title: "Matchday · Wolves Vikings",
+  title: "Who's in · Wolves Vikings",
 }
 
 export default async function MatchdayPage({
@@ -21,10 +21,11 @@ export default async function MatchdayPage({
   return (
     <div className="grid gap-6">
       <header>
-        <h1 className="font-display text-5xl">Matchday</h1>
+        <h1 className="font-display text-5xl">Who&apos;s in</h1>
         <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
-          Put your name on a trip. Going, maybe, or you need a lift. The list is shared.
-          Adding or taking a name off needs the group word.
+          The group is in Iceland. Mark yourself as watching here, flying over, or maybe.
+          Kickoffs are in Iceland time first, then England. Adding or taking a name off
+          needs the group word.
         </p>
       </header>
       <MatchdayBoard

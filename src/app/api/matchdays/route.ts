@@ -5,7 +5,7 @@ import { addRsvp, listRsvps, removeRsvp, type RsvpStatus } from "@/lib/store"
 
 export const dynamic = "force-dynamic"
 
-const statuses: RsvpStatus[] = ["going", "maybe", "lift"]
+const statuses: RsvpStatus[] = ["here", "flying", "maybe"]
 
 async function allowed(code: string | undefined) {
   if (await isMember()) return true
@@ -36,7 +36,10 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Pick a fixture first." }, { status: 400 })
   }
   if (!body.status || !statuses.includes(body.status)) {
-    return NextResponse.json({ error: "Pick Going, Maybe, or Need a lift." }, { status: 400 })
+    return NextResponse.json(
+      { error: "Pick Watching here, Flying over, or Maybe." },
+      { status: 400 },
+    )
   }
 
   const result = await addRsvp({

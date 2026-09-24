@@ -2,7 +2,7 @@ import { randomUUID } from "crypto"
 import { mkdir, readFile, writeFile } from "fs/promises"
 import path from "path"
 
-export type RsvpStatus = "going" | "maybe" | "lift"
+export type RsvpStatus = "here" | "flying" | "maybe"
 
 export type Rsvp = {
   id: string

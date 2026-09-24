@@ -8,8 +8,8 @@ export const group = {
       body: "Home or away, Wolves is why this group exists. The crest on the gate, the old gold, the Saturday that actually matters.",
     },
     {
-      title: "We travel together",
-      body: "Names go on the list, lifts get sorted, and someone always knows which train the rest of us are on.",
+      title: "We watch from Iceland",
+      body: "Most of us are here. The list is who's in for the screen, and who's actually flying over for the match.",
     },
     {
       title: "Stourbridge is the other ground",

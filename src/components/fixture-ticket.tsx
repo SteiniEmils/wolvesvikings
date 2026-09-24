@@ -50,7 +50,7 @@ export function FixtureTicket({
           href={`/matchday?fixture=${fixture.id}`}
           className={buttonVariants({ size: "lg" })}
         >
-          Put your name down
+          Who&apos;s in
         </Link>
         <Link
           href={`/albums/${fixture.id}`}

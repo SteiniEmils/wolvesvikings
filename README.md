@@ -1,6 +1,8 @@
 # Wolves Vikings
 
-A matchday site for the lads who follow Wolverhampton Wanderers, with a smaller corner for Stourbridge F.C. Names for each trip are shared. Photos sit in an album per fixture and stay behind the group word.
+A matchday site for the lads in Iceland who follow Wolverhampton Wanderers, with a smaller corner for Stourbridge F.C. The list is who's watching here and who's flying over. Photos sit in an album per fixture and stay behind the group word.
+
+A banner for each club shows the last result. On a matchday it switches to the live score and the minute, and before kickoff it shows the Iceland time. Scores come from TheSportsDB and refresh on the page.
 
 ## Run
 

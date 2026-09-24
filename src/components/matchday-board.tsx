@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react"
 import { useRouter } from "next/navigation"
 import type { Fixture } from "@/data/fixtures"
-import { formatFixtureDate } from "@/lib/format"
+import { formatFixtureDate, kickoffLine } from "@/lib/format"
 import type { Rsvp, RsvpStatus } from "@/lib/store"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -11,9 +11,9 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 
 const statusLabel: Record<RsvpStatus, string> = {
-  going: "Going",
+  here: "Watching here",
+  flying: "Flying over",
   maybe: "Maybe",
-  lift: "Need a lift",
 }
 
 export function MatchdayBoard({
@@ -31,7 +31,7 @@ export function MatchdayBoard({
   const [fixtureId, setFixtureId] = useState(initialFixtureId)
   const [entries, setEntries] = useState(initialEntries)
   const [name, setName] = useState("")
-  const [status, setStatus] = useState<RsvpStatus>("going")
+  const [status, setStatus] = useState<RsvpStatus>("here")
   const [note, setNote] = useState("")
   const [code, setCode] = useState("")
   const [unlocked, setUnlocked] = useState(member)
@@ -157,11 +157,11 @@ export function MatchdayBoard({
           </optgroup>
         </select>
         <p className="mt-3 text-sm text-muted-foreground">
-          {formatFixtureDate(fixture.date)} · {fixture.time} · {fixture.ground}
+          {formatFixtureDate(fixture.date)} · {kickoffLine(fixture)} · {fixture.ground}
         </p>
         {rows.length === 0 ? (
           <p className="mt-8 border border-dashed border-border p-6 text-sm text-muted-foreground">
-            Nobody has put their name down yet. Be the first on the coach.
+            Nobody from Iceland is down for this one yet.
           </p>
         ) : (
           <ul className="mt-6 divide-y divide-border border border-border">
@@ -194,7 +194,7 @@ export function MatchdayBoard({
         ) : null}
       </section>
       <form onSubmit={onSubmit} className="border border-border bg-card p-5">
-        <h2 className="font-display text-3xl">Put your name down</h2>
+        <h2 className="font-display text-3xl">I&apos;m in</h2>
         <div className="mt-4 grid gap-3">
           <div className="grid gap-2">
             <Label htmlFor="name">First name</Label>
@@ -208,9 +208,9 @@ export function MatchdayBoard({
               onChange={(event) => setStatus(event.target.value as RsvpStatus)}
               className="h-8 w-full border border-input bg-transparent px-2.5 text-sm"
             >
-              <option value="going">Going</option>
+              <option value="here">Watching here</option>
+              <option value="flying">Flying over</option>
               <option value="maybe">Maybe</option>
-              <option value="lift">Need a lift</option>
             </select>
           </div>
           <div className="grid gap-2">
@@ -219,7 +219,7 @@ export function MatchdayBoard({
               id="note"
               value={note}
               maxLength={80}
-              placeholder="Driving, or on the train"
+              placeholder="Reykjavík, or landing Friday"
               onChange={(event) => setNote(event.target.value)}
             />
           </div>
@@ -248,7 +248,7 @@ export function MatchdayBoard({
           </Button>
         </div>
         <Badge variant="outline" className="mt-4">
-          {rows.length} on this trip
+          {rows.length} from Iceland
         </Badge>
       </form>
     </div>
