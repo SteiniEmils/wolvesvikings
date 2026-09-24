@@ -39,7 +39,7 @@ export function AlbumLock() {
   return (
     <section className="mx-auto max-w-md border border-border bg-card px-6 py-10 text-center">
       <Image
-        src="/brand/wolves-vikings-logo.jpg"
+        src="/brand/wolves-vikings-logo.png"
         alt="Wolves Vikings"
         width={220}
         height={220}

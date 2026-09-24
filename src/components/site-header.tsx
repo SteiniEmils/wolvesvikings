@@ -19,7 +19,7 @@ export function SiteHeader() {
       <div className="mx-auto flex w-full max-w-6xl items-center gap-4 px-4 py-3">
         <Link href="/" className="flex min-w-0 items-center gap-3">
           <Image
-            src="/brand/wolves-vikings-logo.jpg"
+            src="/brand/wolves-vikings-logo.png"
             alt="Wolves Vikings"
             width={64}
             height={64}
