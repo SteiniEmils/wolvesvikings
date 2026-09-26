@@ -13,14 +13,17 @@ const news = [
   {
     title: "Wolves take the Black Country derby",
     body: "A 1–0 win over West Bromwich Albion at Molineux on 20 September. Fer López scored it.",
+    image: "/photos/hero-stadium.png",
   },
   {
     title: "Glassboys beaten at home by Real Bedford",
     body: "Stourbridge 1–4 Real Bedford at the War Memorial Athletic Ground on 22 September.",
+    image: "/photos/fans-sunset.png",
   },
   {
     title: "Next from Iceland",
     body: "Rushall Olympic away in the FA Trophy, then Middlesbrough away when the Championship restarts.",
+    image: "/photos/away-coach.png",
   },
 ]
 
@@ -31,7 +34,7 @@ export default async function HomePage() {
 
   return (
     <div>
-      <section className="relative min-h-[620px] overflow-hidden">
+      <section className="relative overflow-hidden">
         <Image
           src="/photos/hero-stadium.png"
           alt="Supporters in gold and black in the stands"
@@ -39,8 +42,8 @@ export default async function HomePage() {
           priority
           className="object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-black via-black/75 to-black/20" />
-        <div className="relative mx-auto grid min-h-[620px] max-w-6xl content-end gap-8 px-4 py-10 lg:grid-cols-[1.2fr_0.8fr] lg:items-end">
+        <div className="absolute inset-0 bg-gradient-to-r from-black via-black/80 to-black/25" />
+        <div className="relative mx-auto grid max-w-6xl gap-8 px-4 pt-8 pb-10 sm:pt-12 lg:grid-cols-[1.15fr_0.85fr] lg:items-end lg:pb-28">
           <div>
             <p className="font-display text-5xl leading-[0.9] text-white sm:text-7xl">
               FOOTBALL
@@ -61,7 +64,7 @@ export default async function HomePage() {
               </Link>
             </div>
           </div>
-          <p className="justify-self-end text-right font-script text-3xl text-primary sm:text-5xl">
+          <p className="text-left font-script text-4xl text-primary sm:text-right sm:text-5xl">
             Different stadiums,
             <br />
             same passion
@@ -69,7 +72,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <div className="relative z-10 mx-auto -mt-16 max-w-6xl px-4">
+      <div className="relative z-10 mx-auto mt-6 max-w-6xl px-4 lg:-mt-16">
         <ClubCards initial={banners} nextWolf={nextWolf} nextGlassboy={nextGlassboy} />
       </div>
 

@@ -12,7 +12,9 @@ function shortDate(date: string) {
     month: "short",
     year: "numeric",
     timeZone: "Europe/London",
-  }).format(new Date(`${date}T12:00:00Z`))
+  })
+    .format(new Date(`${date}T12:00:00Z`))
+    .toUpperCase()
 }
 
 export function ClubCards({
@@ -51,17 +53,12 @@ export function ClubCards({
 
   return (
     <div className="grid gap-4 lg:grid-cols-2">
-      <ClubCard
-        banner={wolves}
-        fixture={nextWolf}
-        title="Wolverhampton Wanderers"
-        href="/fixtures"
-        tone="gold"
-      />
+      <ClubCard banner={wolves} fixture={nextWolf} title="Wolverhampton Wanderers" mark="W" href="/fixtures" tone="gold" />
       <ClubCard
         banner={glassboys}
         fixture={nextGlassboy}
         title="Stourbridge F.C."
+        mark="S"
         href="/fixtures#stourbridge"
         tone="red"
       />
@@ -73,60 +70,75 @@ function ClubCard({
   banner,
   fixture,
   title,
+  mark,
   href,
   tone,
 }: {
   banner?: ScoreBanner
   fixture: Fixture
   title: string
+  mark: string
   href: string
   tone: "gold" | "red"
 }) {
   const red = tone === "red"
+  const live = banner?.state === "live"
+  const border = red ? "border-[#9b2335]" : "border-[#c5a046]"
+  const accent = red ? "text-[#f0b4be]" : "text-[#e6c56a]"
+  const panel = red ? "bg-[#1a0c10]" : "bg-[#14110c]"
+
   return (
-    <article
-      className={
-        red
-          ? "border border-glassboys/70 bg-gradient-to-br from-[#3a1018] to-[#14080b] p-4 sm:p-5"
-          : "border border-primary/70 bg-gradient-to-br from-[#2a220c] to-[#100e09] p-4 sm:p-5"
-      }
-    >
-      <div className="flex items-start justify-between gap-3">
-        <div>
-          <p className={`text-xs tracking-[0.2em] ${red ? "text-red-200" : "text-primary"}`}>
-            {banner?.state === "live" ? `LIVE ${banner.detail}` : "NEXT MATCH"}
-          </p>
-          <h3 className="font-display text-2xl leading-none sm:text-3xl">{title}</h3>
-        </div>
-        <p className="text-right text-xs text-muted-foreground">
-          {fixture.competition}
-          <br />
-          {shortDate(fixture.date)}
-        </p>
+    <article className={`overflow-hidden border ${border} ${panel}`}>
+      <div className={`flex items-center gap-3 border-b ${border} px-4 py-3`}>
+        <span
+          className={`grid size-11 shrink-0 place-items-center font-display text-xl ${
+            red ? "bg-[#9b2335] text-white" : "bg-[#c5a046] text-[#14120c]"
+          }`}
+          style={{ clipPath: "polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%)" }}
+        >
+          {mark}
+        </span>
+        <h3 className="font-display text-2xl leading-none tracking-wide sm:text-3xl">{title}</h3>
       </div>
-      <p className="mt-4 font-display text-4xl leading-none sm:text-5xl">
-        {fixture.home ? "Home" : "Away"}
-        <span className={red ? "text-red-300" : "text-primary"}> · </span>
-        {fixture.opponent}
-      </p>
-      <p className="mt-2 text-sm text-muted-foreground">
-        {kickoffLine(fixture)} · {fixture.ground}
-      </p>
-      {banner && banner.state !== "quiet" ? (
-        <p className="mt-4 text-sm">
-          <span className={red ? "text-red-200" : "text-primary"}>
-            {banner.state === "live" ? "Live" : banner.state === "matchday" ? "Today" : "Last game"}
-          </span>
-          {" · "}
-          {banner.home} {banner.homeScore ?? "–"}–{banner.awayScore ?? "–"} {banner.away}
-          {banner.state !== "live" ? ` · ${banner.detail}` : ""}
-        </p>
-      ) : (
-        <p className="mt-4 text-sm text-muted-foreground">Score feed is quiet right now.</p>
-      )}
-      <Link href={href} className={`mt-4 inline-block text-sm ${red ? "text-red-200" : "text-primary"}`}>
-        View fixtures
-      </Link>
+
+      <div className="grid gap-4 p-4 sm:grid-cols-[1.3fr_0.9fr] sm:items-center">
+        <div>
+          <p className={`text-[11px] tracking-[0.22em] ${accent}`}>{live ? `LIVE · ${banner?.detail}` : "NEXT MATCH"}</p>
+          <p className="mt-2 font-display text-3xl leading-none sm:text-4xl">
+            {fixture.club === "wolves" ? "Wolves" : "Stourbridge"}
+            <span className={`mx-2 ${accent}`}>{live ? `${banner?.homeScore ?? 0}-${banner?.awayScore ?? 0}` : "vs"}</span>
+            {fixture.opponent}
+          </p>
+          <p className="mt-3 text-xs tracking-wide text-muted-foreground">
+            {shortDate(fixture.date)} · {fixture.competition.toUpperCase()}
+          </p>
+          <p className="text-xs text-muted-foreground">
+            {kickoffLine(fixture)} · {fixture.ground}
+          </p>
+        </div>
+        <div className={`border-t pt-3 sm:border-t-0 sm:border-l sm:pt-0 sm:pl-4 ${border}`}>
+          <p className={`text-[11px] tracking-[0.22em] ${accent}`}>LAST GAME</p>
+          {banner && banner.state !== "quiet" ? (
+            <p className="mt-2 font-display text-2xl leading-none">
+              {banner.home} {banner.homeScore ?? "–"}–{banner.awayScore ?? "–"} {banner.away}
+            </p>
+          ) : (
+            <p className="mt-2 text-sm text-muted-foreground">Score feed is quiet right now.</p>
+          )}
+          {banner && banner.state !== "quiet" && !live ? (
+            <p className="mt-2 text-xs text-muted-foreground">{banner.detail}</p>
+          ) : null}
+        </div>
+      </div>
+
+      <div className="flex justify-end px-4 pb-4">
+        <Link
+          href={href}
+          className={`border px-4 py-2 text-xs tracking-[0.16em] ${border} ${accent}`}
+        >
+          VIEW FIXTURES
+        </Link>
+      </div>
     </article>
   )
 }
