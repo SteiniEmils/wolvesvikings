@@ -83,9 +83,12 @@ export default async function HomePage() {
           </div>
           <ul className="grid gap-3">
             {news.map((item) => (
-              <li key={item.title} className="border border-border bg-card p-4">
-                <h3 className="font-medium">{item.title}</h3>
-                <p className="mt-1 text-sm leading-6 text-muted-foreground">{item.body}</p>
+              <li key={item.title} className="grid grid-cols-[88px_1fr] overflow-hidden border border-border bg-card">
+                <Image src={item.image} alt="" width={176} height={120} className="h-full w-[88px] object-cover" />
+                <div className="p-3">
+                  <h3 className="font-medium leading-snug">{item.title}</h3>
+                  <p className="mt-1 text-sm leading-6 text-muted-foreground">{item.body}</p>
+                </div>
               </li>
             ))}
           </ul>
