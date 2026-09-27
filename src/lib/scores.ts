@@ -13,6 +13,7 @@ export type MatchSide = {
 export type ClubCardData = {
   club: "wolves" | "stourbridge"
   title: string
+  badge: string | null
   state: ScoreState
   liveDetail: string | null
   last: {
@@ -303,6 +304,7 @@ export async function loadClubCards(): Promise<ClubCardData[]> {
     return {
       club: team.club,
       title: team.title,
+      badge: clubBadge,
       state,
       liveDetail,
       last: lastBlock,

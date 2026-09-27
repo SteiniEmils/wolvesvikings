@@ -3,8 +3,8 @@ import Link from "next/link"
 import { fixtures } from "@/data/fixtures"
 import { group } from "@/data/group"
 import { ClubCards } from "@/components/club-cards"
+import { HomeColumns } from "@/components/home-columns"
 import { buttonVariants } from "@/components/ui/button"
-import { formatFixtureDate, kickoffLine } from "@/lib/format"
 import { loadClubCards } from "@/lib/scores"
 
 export const dynamic = "force-dynamic"
@@ -14,16 +14,19 @@ const news = [
     title: "Wolves take the Black Country derby",
     body: "A 1–0 win over West Bromwich Albion at Molineux on 20 September. Fer López scored it.",
     image: "/photos/hero-stadium.png",
+    date: "2026-09-20",
   },
   {
     title: "Glassboys beaten at home by Real Bedford",
     body: "Stourbridge 1–4 Real Bedford at the War Memorial Athletic Ground on 22 September.",
     image: "/photos/fans-sunset.png",
+    date: "2026-09-22",
   },
   {
     title: "Next from Iceland",
     body: "Rushall Olympic away in the FA Trophy, then Middlesbrough away when the Championship restarts.",
     image: "/photos/away-coach.png",
+    date: "2026-09-24",
   },
 ]
 
@@ -83,76 +86,15 @@ export default async function HomePage() {
         <ClubCards initial={cards} />
       </div>
 
-      <div className="mx-auto grid max-w-6xl gap-8 px-4 py-12 lg:grid-cols-3">
-        <section id="news">
-          <div className="mb-3 flex items-baseline justify-between">
-            <h2 className="font-display text-3xl">Latest news</h2>
-          </div>
-          <ul className="grid gap-3">
-            {news.map((item) => (
-              <li key={item.title} className="grid grid-cols-[88px_1fr] overflow-hidden border border-border bg-card">
-                <Image src={item.image} alt="" width={176} height={120} className="h-full w-[88px] object-cover" />
-                <div className="p-3">
-                  <h3 className="font-medium leading-snug">{item.title}</h3>
-                  <p className="mt-1 text-sm leading-6 text-muted-foreground">{item.body}</p>
-                </div>
-              </li>
-            ))}
-          </ul>
-        </section>
-
-        <section>
-          <div className="mb-3 flex items-baseline justify-between">
-            <h2 className="font-display text-3xl">Upcoming matches</h2>
-            <Link href="/fixtures" className="text-xs tracking-wide text-primary">
-              VIEW ALL
-            </Link>
-          </div>
-          <ul className="divide-y divide-border border border-border bg-card">
-            {matches.map((fixture) => (
-              <li key={fixture.id} className="px-4 py-3">
-                <p className="font-medium">
-                  {fixture.club === "wolves" ? "Wolves" : "Stourbridge"} {fixture.home ? "vs" : "at"}{" "}
-                  {fixture.opponent}
-                </p>
-                <p className="text-xs text-muted-foreground">
-                  {formatFixtureDate(fixture.date)} · {kickoffLine(fixture)}
-                </p>
-              </li>
-            ))}
-          </ul>
-        </section>
-
-        <section id="trips">
-          <div className="mb-3 flex items-baseline justify-between">
-            <h2 className="font-display text-3xl">Upcoming trips</h2>
-            <Link href="/join" className="text-xs tracking-wide text-primary">
-              JOIN US
-            </Link>
-          </div>
-          <ul className="grid gap-3">
-            {trips.map((fixture, index) => (
-              <li key={fixture.id} className="grid grid-cols-[96px_1fr] overflow-hidden border border-border bg-card">
-                <Image
-                  src={index === 1 ? "/photos/away-coach.png" : "/photos/hero-stadium.png"}
-                  alt=""
-                  width={192}
-                  height={128}
-                  className="h-full w-24 object-cover"
-                />
-                <div className="p-3">
-                  <p className="text-xs text-primary">{formatFixtureDate(fixture.date)}</p>
-                  <p className="font-medium">
-                    {fixture.club === "wolves" ? "Wolves" : "Stourbridge"} {fixture.home ? "vs" : "at"}{" "}
-                    {fixture.opponent}
-                  </p>
-                  <p className="text-xs text-muted-foreground">{fixture.ground}</p>
-                </div>
-              </li>
-            ))}
-          </ul>
-        </section>
-      </div>
+      <HomeColumns
+        news={news}
+        matches={matches}
+        trips={trips}
+        badges={{
+          wolves: cards.find((card) => card.club === "wolves")?.badge ?? null,
+          stourbridge: cards.find((card) => card.club === "stourbridge")?.badge ?? null,
+        }}
+      />
 
       <section id="about" className="relative min-h-[360px] overflow-hidden">
         <Image src="/photos/fans-sunset.png" alt="Supporters watching a stadium at sunset" fill className="object-cover" />
