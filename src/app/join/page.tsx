@@ -22,7 +22,7 @@ export default async function JoinPage() {
       <JoinClub
         approved={rows
           .filter((row) => row.status === "approved")
-          .map((row) => ({ ...row, note: "" }))}
+          .map((row) => ({ ...row, note: "", shirtSize: row.shirtSize }))}
         pending={member ? rows.filter((row) => row.status === "pending") : []}
         member={member}
       />

@@ -2,10 +2,13 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import type { Application } from "@/lib/store"
+import { type Application, type ShirtSize, shirtSizes } from "@/data/membership"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+
+const selectClass =
+  "h-8 w-full border border-input bg-transparent px-2.5 text-sm text-foreground outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
 
 export function JoinClub({
   approved,
@@ -18,7 +21,9 @@ export function JoinClub({
 }) {
   const router = useRouter()
   const [name, setName] = useState("")
+  const [nickname, setNickname] = useState("")
   const [place, setPlace] = useState("")
+  const [shirtSize, setShirtSize] = useState<ShirtSize | "">("")
   const [note, setNote] = useState("")
   const [code, setCode] = useState("")
   const [unlocked, setUnlocked] = useState(member)
@@ -61,7 +66,7 @@ export function JoinClub({
       const response = await fetch("/api/applications", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ name, place, note }),
+        body: JSON.stringify({ name, nickname, place, shirtSize, note }),
       })
       const payload = (await response.json().catch(() => null)) as { error?: string } | null
       if (!response.ok) {
@@ -70,7 +75,9 @@ export function JoinClub({
       }
       setSent(true)
       setName("")
+      setNickname("")
       setPlace("")
+      setShirtSize("")
       setNote("")
     } catch {
       setError("The application didn't send. Try again.")
@@ -124,8 +131,37 @@ export function JoinClub({
               <Input id="name" value={name} onChange={(event) => setName(event.target.value)} required />
             </div>
             <div className="grid gap-2">
+              <Label htmlFor="nickname">Nickname</Label>
+              <Input
+                id="nickname"
+                value={nickname}
+                maxLength={24}
+                placeholder="Optional"
+                onChange={(event) => setNickname(event.target.value)}
+              />
+            </div>
+            <div className="grid gap-2">
               <Label htmlFor="place">Where in Iceland</Label>
               <Input id="place" value={place} maxLength={40} onChange={(event) => setPlace(event.target.value)} />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="shirtSize">Shirt size</Label>
+              <select
+                id="shirtSize"
+                value={shirtSize}
+                onChange={(event) => setShirtSize(event.target.value as ShirtSize | "")}
+                className={selectClass}
+                required
+              >
+                <option value="" disabled>
+                  Pick a size
+                </option>
+                {shirtSizes.map((size) => (
+                  <option key={size} value={size}>
+                    {size}
+                  </option>
+                ))}
+              </select>
             </div>
             <div className="grid gap-2">
               <Label htmlFor="note">Who you are</Label>
@@ -160,7 +196,12 @@ export function JoinClub({
           <ul className="mt-4 divide-y divide-border border border-border">
             {members.map((person) => (
               <li key={person.id} className="px-4 py-3">
-                <p className="font-medium">{person.name}</p>
+                <p className="font-medium">
+                  {person.name}
+                  {person.nickname ? (
+                    <span className="font-normal text-muted-foreground"> “{person.nickname}”</span>
+                  ) : null}
+                </p>
                 {person.place ? <p className="text-sm text-muted-foreground">{person.place}</p> : null}
               </li>
             ))}
@@ -180,14 +221,29 @@ export function JoinClub({
             <ul className="mt-4 divide-y divide-border border border-border">
               {waiting.map((person) => (
                 <li key={person.id} className="px-4 py-3">
-                  <p className="font-medium">{person.name}</p>
-                  {person.place ? <p className="text-sm text-muted-foreground">{person.place}</p> : null}
+                  <p className="font-medium">
+                    {person.name}
+                    {person.nickname ? (
+                      <span className="font-normal text-muted-foreground"> “{person.nickname}”</span>
+                    ) : null}
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    {[person.place, person.shirtSize ? `Shirt ${person.shirtSize}` : ""]
+                      .filter(Boolean)
+                      .join(" · ")}
+                  </p>
                   <p className="mt-1 text-sm">{person.note}</p>
                   <div className="mt-3 flex gap-2">
                     <Button type="button" size="sm" disabled={pendingSave} onClick={() => review(person.id, "approved")}>
                       Approve
                     </Button>
-                    <Button type="button" size="sm" variant="outline" disabled={pendingSave} onClick={() => review(person.id, "declined")}>
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant="outline"
+                      disabled={pendingSave}
+                      onClick={() => review(person.id, "declined")}
+                    >
                       Decline
                     </Button>
                   </div>

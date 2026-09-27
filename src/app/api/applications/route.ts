@@ -9,7 +9,7 @@ export async function GET() {
   const member = await isMember()
   const approved = rows
     .filter((row) => row.status === "approved")
-    .map(({ note: _note, ...row }) => row)
+    .map(({ note: _note, shirtSize: _shirtSize, ...row }) => row)
   return NextResponse.json({
     approved,
     pending: member ? rows.filter((row) => row.status === "pending") : [],
@@ -19,7 +19,9 @@ export async function GET() {
 export async function POST(request: Request) {
   const body = (await request.json().catch(() => null)) as {
     name?: string
+    nickname?: string
     place?: string
+    shirtSize?: string
     note?: string
   } | null
   if (!body) {
@@ -27,7 +29,9 @@ export async function POST(request: Request) {
   }
   const result = await applyToClub({
     name: body.name ?? "",
+    nickname: body.nickname ?? "",
     place: body.place ?? "",
+    shirtSize: body.shirtSize ?? "",
     note: body.note ?? "",
   })
   if (!result.ok) {

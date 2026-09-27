@@ -1,17 +1,14 @@
 import { randomUUID } from "crypto"
 import { mkdir, readFile, writeFile } from "fs/promises"
 import path from "path"
+import {
+  type Application,
+  type ShirtSize,
+  shirtSizes,
+} from "@/data/membership"
 
-export type ApplicationStatus = "pending" | "approved" | "declined"
-
-export type Application = {
-  id: string
-  name: string
-  place: string
-  note: string
-  status: ApplicationStatus
-  createdAt: string
-}
+export type { Application, ApplicationStatus, ShirtSize } from "@/data/membership"
+export { shirtSizes } from "@/data/membership"
 
 export type Photo = {
   id: string
@@ -54,7 +51,16 @@ async function writeJson(file: string, value: unknown) {
 }
 
 export function listApplications() {
-  return withLock(() => readJson<Application[]>(applicationsPath, []))
+  return withLock(async () => {
+    const rows = await readJson<Application[]>(applicationsPath, [])
+    return rows.map((row) => ({
+      ...row,
+      nickname: row.nickname ?? "",
+      shirtSize: shirtSizes.includes(row.shirtSize) ? row.shirtSize : ("M" as ShirtSize),
+      place: row.place ?? "",
+      note: row.note ?? "",
+    }))
+  })
 }
 
 const namePattern = /^[A-Za-z][A-Za-z .'-]{0,22}[A-Za-z]$|^[A-Za-z]{2}$/
@@ -67,12 +73,35 @@ export function cleanName(value: string) {
   return name
 }
 
-export function applyToClub(input: { name: string; place: string; note: string }) {
+function cleanNickname(value: string) {
+  const nickname = value.trim().replace(/\s+/g, " ")
+  if (!nickname) return ""
+  if (nickname.length > 24) return null
+  if (!/^[A-Za-z0-9][A-Za-z0-9 .'_-]{0,22}[A-Za-z0-9]$|^[A-Za-z0-9]{1,2}$/.test(nickname)) {
+    return null
+  }
+  return nickname
+}
+
+export function applyToClub(input: {
+  name: string
+  nickname: string
+  place: string
+  shirtSize: string
+  note: string
+}) {
   return withLock(async () => {
     const rows = await readJson<Application[]>(applicationsPath, [])
     const name = cleanName(input.name)
     if (!name) {
       return { ok: false as const, error: "Use a first name, 2 to 24 letters." }
+    }
+    const nickname = cleanNickname(input.nickname)
+    if (nickname === null) {
+      return { ok: false as const, error: "Nickname can be blank, or up to 24 letters and numbers." }
+    }
+    if (!shirtSizes.includes(input.shirtSize as ShirtSize)) {
+      return { ok: false as const, error: "Pick a shirt size from the list." }
     }
     const note = input.note.trim().replace(/\s+/g, " ")
     if (note.length < 8 || note.length > 200) {
@@ -89,7 +118,9 @@ export function applyToClub(input: { name: string; place: string; note: string }
     const entry: Application = {
       id: randomUUID(),
       name,
+      nickname,
       place: input.place.trim().replace(/\s+/g, " ").slice(0, 40),
+      shirtSize: input.shirtSize as ShirtSize,
       note,
       status: "pending",
       createdAt: new Date().toISOString(),
