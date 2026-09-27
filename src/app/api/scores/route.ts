@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server"
-import { loadBanners } from "@/lib/scores"
+import { loadClubCards } from "@/lib/scores"
 
 export const dynamic = "force-dynamic"
 
 export async function GET() {
-  const banners = await loadBanners()
-  return NextResponse.json({ banners })
+  const cards = await loadClubCards()
+  return NextResponse.json({ cards })
 }

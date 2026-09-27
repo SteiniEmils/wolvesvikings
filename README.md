@@ -2,7 +2,7 @@
 
 A site for the Wolves Vikings, a small supporters' group in Iceland, with a smaller corner for Stourbridge F.C. People apply to join, and someone already in the club has to approve them. Photos sit in an album per fixture and stay behind the group word.
 
-A banner for each club shows the last result. On a matchday it switches to the live score and the minute, and before kickoff it shows the Iceland time. Scores come from TheSportsDB and refresh on the page.
+Each club has a match card with the last result, the next kick-off, team badges, and a last-five form. On a matchday the card switches to the live score and the minute. Kick-offs are shown in Iceland time first. Scores and badges come from TheSportsDB. The rest of the five-game form is kept in `src/data/form.ts` because the free feed only returns one past match.
 
 ## Run
 

@@ -1,11 +1,11 @@
 import Image from "next/image"
 import Link from "next/link"
-import { fixtures, nextGlassboy, nextWolf } from "@/data/fixtures"
+import { fixtures } from "@/data/fixtures"
 import { group } from "@/data/group"
 import { ClubCards } from "@/components/club-cards"
 import { buttonVariants } from "@/components/ui/button"
 import { formatFixtureDate, kickoffLine } from "@/lib/format"
-import { loadBanners } from "@/lib/scores"
+import { loadClubCards } from "@/lib/scores"
 
 export const dynamic = "force-dynamic"
 
@@ -28,7 +28,7 @@ const news = [
 ]
 
 export default async function HomePage() {
-  const banners = await loadBanners()
+  const cards = await loadClubCards()
   const trips = [...fixtures].sort((a, b) => a.date.localeCompare(b.date)).slice(0, 3)
   const matches = [...fixtures].sort((a, b) => a.date.localeCompare(b.date)).slice(0, 4)
 
@@ -73,7 +73,7 @@ export default async function HomePage() {
       </section>
 
       <div className="relative z-10 mx-auto mt-6 max-w-6xl px-4 lg:-mt-16">
-        <ClubCards initial={banners} nextWolf={nextWolf} nextGlassboy={nextGlassboy} />
+        <ClubCards initial={cards} />
       </div>
 
       <div className="mx-auto grid max-w-6xl gap-8 px-4 py-12 lg:grid-cols-3">
