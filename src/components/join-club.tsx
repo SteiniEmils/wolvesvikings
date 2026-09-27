@@ -58,15 +58,24 @@ export function JoinClub({
     }
   }
 
-  async function apply(event: React.FormEvent) {
+  async function apply(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
     setError("")
     setPendingSave(true)
+    const form = event.currentTarget
+    const data = new FormData(form)
+    const body = {
+      name: String(data.get("name") ?? ""),
+      nickname: String(data.get("nickname") ?? ""),
+      place: String(data.get("place") ?? ""),
+      shirtSize: String(data.get("shirtSize") ?? ""),
+      note: String(data.get("note") ?? ""),
+    }
     try {
       const response = await fetch("/api/applications", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ name, nickname, place, shirtSize, note }),
+        body: JSON.stringify(body),
       })
       const payload = (await response.json().catch(() => null)) as { error?: string } | null
       if (!response.ok) {
@@ -79,6 +88,11 @@ export function JoinClub({
       setPlace("")
       setShirtSize("")
       setNote("")
+      if (unlocked) {
+        const list = await fetch("/api/applications")
+        const next = (await list.json().catch(() => null)) as { pending?: Application[] } | null
+        if (next?.pending) setWaiting(next.pending)
+      }
     } catch {
       setError("The application didn't send. Try again.")
     } finally {
@@ -128,12 +142,19 @@ export function JoinClub({
           <form onSubmit={apply} className="mt-4 grid gap-3">
             <div className="grid gap-2">
               <Label htmlFor="name">First name</Label>
-              <Input id="name" value={name} onChange={(event) => setName(event.target.value)} required />
+              <Input
+                id="name"
+                name="name"
+                value={name}
+                onChange={(event) => setName(event.target.value)}
+                required
+              />
             </div>
             <div className="grid gap-2">
               <Label htmlFor="nickname">Nickname</Label>
               <Input
                 id="nickname"
+                name="nickname"
                 value={nickname}
                 maxLength={24}
                 placeholder="Optional"
@@ -142,12 +163,19 @@ export function JoinClub({
             </div>
             <div className="grid gap-2">
               <Label htmlFor="place">Where in Iceland</Label>
-              <Input id="place" value={place} maxLength={40} onChange={(event) => setPlace(event.target.value)} />
+              <Input
+                id="place"
+                name="place"
+                value={place}
+                maxLength={40}
+                onChange={(event) => setPlace(event.target.value)}
+              />
             </div>
             <div className="grid gap-2">
               <Label htmlFor="shirtSize">Shirt size</Label>
               <select
                 id="shirtSize"
+                name="shirtSize"
                 value={shirtSize}
                 onChange={(event) => setShirtSize(event.target.value as ShirtSize | "")}
                 className={selectClass}
@@ -167,6 +195,7 @@ export function JoinClub({
               <Label htmlFor="note">Who you are</Label>
               <Input
                 id="note"
+                name="note"
                 value={note}
                 maxLength={200}
                 placeholder="How you know the group"
