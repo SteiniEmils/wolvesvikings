@@ -34,45 +34,52 @@ export default async function HomePage() {
 
   return (
     <div>
-      <section className="relative overflow-hidden">
+      <section className="relative min-h-[560px] overflow-hidden sm:min-h-[640px]">
         <Image
           src="/photos/hero-stadium.png"
           alt="Supporters in gold and black in the stands"
           fill
           priority
-          className="object-cover"
+          className="object-cover object-[center_30%]"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-black via-black/80 to-black/25" />
-        <div className="relative mx-auto grid max-w-6xl gap-8 px-4 pt-8 pb-10 sm:pt-12 lg:grid-cols-[1.15fr_0.85fr] lg:items-end lg:pb-28">
+        <div className="absolute inset-0 bg-gradient-to-r from-black via-black/75 to-black/15" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30" />
+        <div className="relative mx-auto grid min-h-[560px] max-w-6xl content-center gap-8 px-4 py-12 sm:min-h-[640px] sm:py-16 lg:grid-cols-[1.2fr_0.8fr] lg:items-center lg:pb-40">
           <div>
-            <p className="font-display text-5xl leading-[0.9] text-white sm:text-7xl">
+            <h1 className="font-display text-5xl leading-[0.88] tracking-tight text-white sm:text-7xl lg:text-8xl">
               FOOTBALL
               <br />
-              FRIENDS
+              <span className="text-primary">FRIENDS</span>
               <br />
-              <span className="text-primary">TRAVEL MEMORIES</span>
-            </p>
-            <p className="mt-4 max-w-xl text-sm leading-6 text-white/80 sm:text-base">
+              TRAVEL MEMORIES
+            </h1>
+            <p className="mt-5 max-w-xl text-sm leading-7 text-white/80 sm:text-base">
               {group.line} We are in Iceland. Molineux is the main event. Stourbridge is the other ground.
             </p>
-            <div className="mt-6 flex flex-wrap gap-3">
-              <Link href="#about" className={buttonVariants({ size: "lg" })}>
-                Our story
+            <div className="mt-7 flex flex-wrap gap-3">
+              <Link
+                href="/join"
+                className={`${buttonVariants({ size: "lg" })} rounded-md px-5 font-semibold tracking-wide`}
+              >
+                Join our group
               </Link>
-              <Link href="#trips" className={buttonVariants({ variant: "outline", size: "lg" })}>
+              <Link
+                href="#trips"
+                className={`${buttonVariants({ variant: "outline", size: "lg" })} rounded-md border-primary/70 bg-black/20 px-5 text-white hover:bg-black/40`}
+              >
                 Upcoming trips
               </Link>
             </div>
           </div>
-          <p className="text-left font-script text-4xl text-primary sm:text-right sm:text-5xl">
-            Different stadiums,
+          <p className="max-w-sm justify-self-start text-left font-script text-4xl leading-tight text-primary sm:text-5xl lg:justify-self-end lg:text-right lg:text-6xl">
+            Different Stadiums,
             <br />
-            same passion
+            Same Passion.
           </p>
         </div>
       </section>
 
-      <div className="relative z-10 mx-auto mt-6 max-w-6xl px-4 lg:-mt-16">
+      <div className="relative z-10 mx-auto -mt-4 max-w-6xl px-4 sm:mt-6 lg:-mt-24">
         <ClubCards initial={cards} />
       </div>
 
