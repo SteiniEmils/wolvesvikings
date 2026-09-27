@@ -115,7 +115,7 @@ function ClubCard({ card }: { card: ClubCardData }) {
         <h3 className="font-display text-2xl leading-none tracking-wide sm:text-3xl">{card.title}</h3>
       </div>
 
-      <div className="grid gap-3 p-4 sm:grid-cols-[1.15fr_0.95fr]">
+      <div className="grid gap-3 p-3 sm:grid-cols-[1.15fr_0.95fr] sm:p-4">
         <div className="rounded-lg border border-white/10 bg-black/35 p-3">
           <p className={`text-[11px] tracking-[0.22em] ${accent}`}>
             {card.state === "live" ? `LIVE · ${card.liveDetail}` : "LAST MATCH"}
@@ -124,7 +124,7 @@ function ClubCard({ card }: { card: ClubCardData }) {
             <div className="mt-3 flex items-center justify-between gap-2">
               <div className="flex min-w-0 flex-1 flex-col items-center gap-1 text-center">
                 <Badge side={card.last.home} />
-                <p className="truncate text-xs text-muted-foreground">{card.last.home.name}</p>
+                <p className="w-full truncate text-xs text-muted-foreground">{card.last.home.name}</p>
               </div>
               <p className="font-display text-3xl leading-none sm:text-4xl">
                 {card.last.home.score}
@@ -133,7 +133,7 @@ function ClubCard({ card }: { card: ClubCardData }) {
               </p>
               <div className="flex min-w-0 flex-1 flex-col items-center gap-1 text-center">
                 <Badge side={card.last.away} />
-                <p className="truncate text-xs text-muted-foreground">{card.last.away.name}</p>
+                <p className="w-full truncate text-xs text-muted-foreground">{card.last.away.name}</p>
               </div>
             </div>
           ) : (
@@ -161,12 +161,12 @@ function ClubCard({ card }: { card: ClubCardData }) {
               <div className="mt-3 flex items-center justify-between gap-2">
                 <div className="flex min-w-0 flex-1 flex-col items-center gap-1 text-center">
                   <Badge side={card.next.home} size={36} />
-                  <p className="truncate text-xs">{card.next.home.name}</p>
+                  <p className="w-full truncate text-xs">{card.next.home.name}</p>
                 </div>
                 <span className={`font-display text-xl ${accent}`}>vs</span>
                 <div className="flex min-w-0 flex-1 flex-col items-center gap-1 text-center">
                   <Badge side={card.next.away} size={36} />
-                  <p className="truncate text-xs">{card.next.away.name}</p>
+                  <p className="w-full truncate text-xs">{card.next.away.name}</p>
                 </div>
               </div>
               <p className="mt-2 text-center text-xs text-muted-foreground">{card.next.ground}</p>
@@ -177,14 +177,14 @@ function ClubCard({ card }: { card: ClubCardData }) {
         </div>
       </div>
 
-      <div className="flex flex-wrap items-center justify-between gap-3 border-t border-white/10 px-4 py-3">
+      <div className="flex flex-col gap-3 border-t border-white/10 px-3 py-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:px-4">
         <div>
           <p className={`mb-1 text-[11px] tracking-[0.22em] ${accent}`}>LAST 5 GAMES</p>
           <FormDots form={card.form} red={red} />
         </div>
         <Link
           href={card.fixturesHref}
-          className={`border px-4 py-2 text-xs tracking-[0.16em] ${
+          className={`border px-4 py-2 text-center text-xs tracking-[0.16em] ${
             red ? "border-[#9b2335] text-[#f0b4be]" : "border-[#c5a046] text-[#e6c56a]"
           }`}
         >

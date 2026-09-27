@@ -65,12 +65,15 @@ function SectionHead({
   icon?: ReactNode
 }) {
   return (
-    <div className="mb-4 flex items-center justify-between gap-3">
-      <h2 className="flex items-center gap-2 font-display text-3xl tracking-wide">
+    <div className="mb-4 flex items-end justify-between gap-3">
+      <h2 className="flex items-center gap-2 font-display text-2xl tracking-wide sm:text-3xl">
         {icon}
         {title}
       </h2>
-      <Link href={href} className="text-[11px] tracking-[0.16em] text-primary hover:text-primary/80">
+      <Link
+        href={href}
+        className="shrink-0 text-[11px] tracking-[0.16em] text-primary hover:text-primary/80"
+      >
         {linkLabel} →
       </Link>
     </div>
@@ -91,7 +94,7 @@ export function HomeColumns({
   const tripPhotos = ["/photos/hero-stadium.png", "/photos/away-coach.png", "/photos/fans-sunset.png"]
 
   return (
-    <div className="mx-auto grid max-w-6xl gap-8 px-4 py-12 lg:grid-cols-3">
+    <div className="mx-auto grid max-w-6xl gap-10 px-4 py-10 sm:py-12 lg:grid-cols-3 lg:gap-8">
       <section id="news">
         <SectionHead
           title="Latest news"
@@ -103,14 +106,14 @@ export function HomeColumns({
           {news.map((item) => (
             <li
               key={item.title}
-              className="grid grid-cols-[92px_1fr] overflow-hidden rounded-lg border border-white/10 bg-card/80"
+              className="grid grid-cols-[76px_1fr] overflow-hidden rounded-lg border border-white/10 bg-card/80 sm:grid-cols-[92px_1fr]"
             >
               <Image
                 src={item.image}
                 alt=""
                 width={184}
                 height={128}
-                className="h-full min-h-[96px] w-[92px] object-cover"
+                className="h-full min-h-[88px] w-[76px] object-cover sm:min-h-[96px] sm:w-[92px]"
               />
               <div className="p-3">
                 <h3 className="text-sm font-semibold leading-snug text-white">{item.title}</h3>
@@ -129,7 +132,7 @@ export function HomeColumns({
             <li key={fixture.id} className={index > 0 ? "border-t border-white/10" : undefined}>
               <Link
                 href="/fixtures"
-                className="flex items-center gap-3 px-3 py-3 transition-colors hover:bg-white/5"
+                className="flex items-center gap-2.5 px-3 py-3 transition-colors hover:bg-white/5 sm:gap-3"
               >
                 <ClubMark club={fixture.club} badge={badges[fixture.club]} />
                 <span className="min-w-0 flex-1">
@@ -161,16 +164,16 @@ export function HomeColumns({
             <li key={fixture.id}>
               <Link
                 href={`/albums/${fixture.id}`}
-                className="grid grid-cols-[104px_1fr_auto] overflow-hidden rounded-lg border border-white/10 bg-card/80 transition-colors hover:bg-white/5"
+                className="grid grid-cols-[88px_1fr_auto] overflow-hidden rounded-lg border border-white/10 bg-card/80 transition-colors hover:bg-white/5 sm:grid-cols-[104px_1fr_auto]"
               >
                 <Image
                   src={tripPhotos[index % tripPhotos.length]}
                   alt=""
                   width={208}
                   height={128}
-                  className="h-full min-h-[88px] w-[104px] object-cover"
+                  className="h-full min-h-[88px] w-[88px] object-cover sm:w-[104px]"
                 />
-                <span className="p-3">
+                <span className="min-w-0 p-3">
                   <span className="block text-[11px] tracking-wide text-primary">
                     {tripDate(fixture.date)}
                   </span>
@@ -178,7 +181,9 @@ export function HomeColumns({
                     {fixture.club === "wolves" ? "Wolves" : "Stourbridge"}{" "}
                     {fixture.home ? "vs" : "at"} {fixture.opponent}
                   </span>
-                  <span className="mt-1 block text-xs text-muted-foreground">{fixture.ground}</span>
+                  <span className="mt-1 block truncate text-xs text-muted-foreground">
+                    {fixture.ground}
+                  </span>
                 </span>
                 <span className="flex items-center pr-3">
                   <ChevronRight className="size-4 text-primary" />
